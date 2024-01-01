@@ -11,17 +11,22 @@ jobs:
   job-a:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: emscripten-core/emsdk
+          path: emsdk
+
       - name: 'Install build requirement: `emscripten`'
         run: |
-          git clone https://github.com/emscripten-core/emsdk.git
-          cd emsdk
           ./emsdk install latest
           ./emsdk activate latest
           source ./emsdk_env.sh
+        working-directory: emsdk
 
       - uses: actions/checkout@v4
         with:
           submodules: recursive
+          path: main
 
       - name: 'Verify build requirement: `emscripten`'
         run: |
@@ -34,12 +39,12 @@ jobs:
           emconfigure ./configure --with-oniguruma=builtinrun
           emmake make LDFLAGS=-all-static
           cp jq jq.o
-        working-directory: jq
+        working-directory: main/jq
 
       - name: 'Try to do the thing with the `jq` module'
         run: |
           emcc jq.o -o jq.js -s ERROR_ON_UNDEFINED_SYMBOLS=0
-        working-directory: jq
+        working-directory: main/jq
 
       - name: Create test data
         id: test-data
@@ -51,4 +56,5 @@ jobs:
       - env:
           JSON_FILE: ${{ steps.test-data.outputs.json }}
         run: |
-          node jq/jq.js '.a' $JSON_FILE
+          node jq.js '.a' $JSON_FILE
+        working-directory: main/jq
