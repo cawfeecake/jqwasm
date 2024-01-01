@@ -20,15 +20,15 @@ jobs:
         run: |
           ./emsdk install latest
           ./emsdk activate latest
-          
-          old_path_file=$(mktemp)
-          echo $PATH | tee $old_path_file
-          
+
+          # DEBUG
+          echo "old_path=$PATH"
+
           source ./emsdk_env.sh
-          
-          new_path_file=$(mktemp)
-          echo $PATH | tee $new_path_file        
-          
+
+          # DEBUG
+          echo "new_path=$PATH"
+
           #git diff --word-diff --word-diff-regex=. --no-index $old_path_file $new_path_file
 
           echo $PATH > $GITHUB_PATH
