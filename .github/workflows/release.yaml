@@ -17,4 +17,4 @@ jobs:
 
       - name: 'Verify build requirement: `emscripten`'
         run: |
-          ./emcc -v
+          emcc -v
