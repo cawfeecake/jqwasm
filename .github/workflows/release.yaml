@@ -1,6 +1,8 @@
 ---
 name: Release `jq` latest as WASM
 
+run-name: 'Release `jq` latest as WASM (from: ${{ github.ref }})'
+
 on:
   workflow_call:
   workflow_dispatch:
