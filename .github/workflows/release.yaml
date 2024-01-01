@@ -13,10 +13,10 @@ jobs:
         run: |
           eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
-      - name: Install build requirement: `emscripten`
+      - name: 'Install build requirement: `emscripten`'
         run: |
           brew install emscripten
 
-      - name: Verify build requirement: `emscripten`
+      - name: 'Verify build requirement: `emscripten`'
         run: |
           ./emcc -v
