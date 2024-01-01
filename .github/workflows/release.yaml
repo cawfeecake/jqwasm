@@ -9,6 +9,10 @@ jobs:
   job-a:
     runs-on: ubuntu-latest
     steps:
+      - name: Update PATH to include software installed with homebrew
+        run: |
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
       - name: Install build requirement: `emscripten`
         run: |
           brew install emscripten
