@@ -28,15 +28,23 @@ jobs:
           git submodule update --init
           autoreconf -i
           emconfigure ./configure --with-oniguruma=builtinrun
-          emmake make -j8
+          emmake make LDFLAGS=-all-static
           cp jq jq.o
         working-directory: jq
 
-      - name: DEBUG
-        run: |
-          ls -AR jq
-
       - name: 'Try to do the thing with the `jq` module'
         run: |
-          emcc -s EXPORTED_RUNTIME_METHODS='["callMain"]' -s ALLOW_MEMORY_GROWTH=1 -s EXPORT_NAME="jq" -s WASM=1 jq.o -o jq.wasm.js
+          emcc jq.o -o jq.js -s ERROR_ON_UNDEFINED_SYMBOLS=0
         working-directory: jq
+
+      - name: Create test data
+        id: test-data
+        run: |
+          tmpfile=$(mktemp)
+          echo '{ "a": "b" }' > $tmpfile
+          echo "json=$tmpfile" | tee -a $GITHUB_OUTPUT
+
+      - env:
+          JSON_FILE: ${{ steps.test-data.outputs.json }}
+        run: |
+          node jq/jq.js '.a' $JSON_FILE
