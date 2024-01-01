@@ -1,0 +1,14 @@
+---
+name: Release `jq` latest as WASM
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  job-a:
+    runs-on: ubuntu-latest
+    steps:
+      - name: A
+        run: |
+          echo 'Hello!'
