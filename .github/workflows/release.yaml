@@ -11,15 +11,17 @@ jobs:
   job-a:
     runs-on: ubuntu-latest
     steps:
+      - name: 'Install build requirement: `emscripten`'
+        run: |
+          git clone https://github.com/emscripten-core/emsdk.git
+          cd emsdk
+          ./emsdk install latest
+          ./emsdk activate latest
+          source ./emsdk_env.sh
+
       - uses: actions/checkout@v4
         with:
           submodules: recursive
-
-      - uses: Homebrew/actions/setup-homebrew@b50a1fd1a8d4df5cffc532716d4afb69a9c9d941 # SHA for commit at 2023-12-23
-
-      - name: 'Install build requirement: `emscripten`'
-        run: |
-          brew install emscripten
 
       - name: 'Verify build requirement: `emscripten`'
         run: |
