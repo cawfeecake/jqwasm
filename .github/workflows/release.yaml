@@ -20,7 +20,7 @@ jobs:
           restore-keys: ${{ runner.os }}-rubygems-
 
       - name: 'Install build requirement: `emscripten`'
-        if: steps.cache.outputs.cache-hit != 'true'
+        if: steps.cache-homebrew.outputs.cache-hit != 'true'
         run: |
           brew install emscripten
 
