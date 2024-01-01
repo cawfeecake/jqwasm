@@ -20,7 +20,18 @@ jobs:
         run: |
           ./emsdk install latest
           ./emsdk activate latest
+          
+          old_path_file=$(mktemp)
+          echo $PATH > $old_path_file
+          
           source ./emsdk_env.sh
+          
+          new_path_file=$(mktemp)
+          echo $PATH > $new_path_file        
+          
+          git diff --word-diff --word-diff-regex=. --no-index $old_path_file $new_path_file
+
+          echo $PATH > $GITHUB_PATH
         working-directory: emsdk
 
       - uses: actions/checkout@v4
