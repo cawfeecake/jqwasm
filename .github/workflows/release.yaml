@@ -9,6 +9,10 @@ jobs:
   job-a:
     runs-on: ubuntu-latest
     steps:
-      - name: A
+      - name: Install build requirement: `emscripten`
         run: |
-          echo 'Hello!'
+          brew install emscripten
+
+      - name: Verify build requirement: `emscripten`
+        run: |
+          ./emcc -v
