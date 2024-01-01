@@ -1,7 +1,7 @@
 ---
-name: Release `jq` latest as WASM
+name: release
 
-run-name: 'Release `jq` latest as WASM (from: ${{ github.ref }})'
+run-name: 'release `jq` (branch: ${{ github.ref }})'
 
 on:
   workflow_call:
