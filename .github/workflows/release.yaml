@@ -48,13 +48,13 @@ jobs:
           git submodule update --init
           autoreconf -i
           emconfigure ./configure --with-oniguruma=builtinrun
-          emmake make LDFLAGS=-all-static
+          emmake make
           cp jq jq.o
         working-directory: main/jq
 
       - name: 'Try to do the thing with the `jq` module'
         run: |
-          emcc jq.o -o jq.js -s ERROR_ON_UNDEFINED_SYMBOLS=0
+          emcc jq.o -o jq.js -sERROR_ON_UNDEFINED_SYMBOLS=0
         working-directory: main/jq
 
       - name: Create test data
