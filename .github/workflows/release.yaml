@@ -55,6 +55,7 @@ jobs:
 
           emcc_cflags='-sMODULARIZE=1 -sEXPORT_NAME=jq -sEXIT_RUNTIME=0'
           emcc_cflags+=' -sALLOW_MEMORY_GROWTH=1'
+          emcc_cflags+=' -sUSE_PTHREADS=0'
           emcc_cflags+=" -sEXPORTED_RUNTIME_METHODS='[\"callMain\"]'"
           emcc_cflags+=" -sEXPORTED_FUNCTIONS='[\"_main\"]'"
 
@@ -70,34 +71,16 @@ jobs:
           cp jq jq.js
         working-directory: main/jq
 
-      - uses: actions/upload-artifact@v4
-        with:
-          name: jq.js
-          path: main/jq/jq.js
-
-      #- name: 'Try to do the thing with the `jq` module'
-      #  run: |
-      #    emcc jq.o -o jq.js -s ERROR_ON_UNDEFINED_SYMBOLS=0
-      #  working-directory: main/jq
-
-      - name: DEBUG
+      - name: '[DEBUG] after build'
         run: |
           echo '::group::`ls -AR`...'
           ls -AR
           echo '::endgroup::'
-          type jq
-          head jq
+          type jq.js
+          head jq.js
         working-directory: main/jq
 
-      - name: Create test data
-        id: test-data
-        run: |
-          tmpfile=$(mktemp)
-          echo '{"a":"b"}' > $tmpfile
-          echo "json=$tmpfile" | tee -a $GITHUB_OUTPUT
-
-      - env:
-          JSON_FILE: ${{ steps.test-data.outputs.json }}
-        run: |
-          node jq.js '.a' $JSON_FILE
-        working-directory: main/jq
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jq.js
+          path: main/jq/jq.js
