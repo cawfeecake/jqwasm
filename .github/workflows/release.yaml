@@ -46,10 +46,15 @@ jobs:
       - name: 'Prep the `jq` module'
         run: |
           git submodule update --init
+          echo '::group::`autoreconf -i`'
           autoreconf -i
+          echo '::endgroup::'
+          echo '::group::`emconfigure ./configure...`'
           emconfigure ./configure --with-oniguruma=builtinrun
+          echo '::endgroup::'
 
           emcc_cflags=' -sMODULARIZE=1 -sEXPORT_NAME=jq -sEXIT_RUNTIME=0'
+          emcc_cflags=' -sALLOW_MEMORY_GROWTH=1'
           emcc_cflags=" -sEXPORTED_RUNTIME_METHODS='[\"callMain\"]"
           emcc_cflags=" -sEXPORTED_FUNCTIONS='[\"_main\"]'"
 
@@ -57,7 +62,7 @@ jobs:
           emcc_cflags=" --pre-js $main_repo_path/pre.js"
           emcc_cflags=" --post-js $main_repo_path/post.js"
 
-          echo "EMCC_CFLAG=Semcc_cflags"
+          echo "EMCC_CFLAG=$emcc_cflags"
           echo '::group::`emmake make...`'
           EMCC_CFLAGS="$emcc_cflags" emmake make LDFLAGS=-all-static
           echo '::endgroup::'
