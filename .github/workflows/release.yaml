@@ -76,7 +76,7 @@ jobs:
           echo '::group::`ls -AR`...'
           ls -AR
           echo '::endgroup::'
-          type jq.js
+          file jq.js
           head jq.js
         working-directory: main/jq
 
