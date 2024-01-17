@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  job-a:
+  release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -48,20 +48,35 @@ jobs:
           git submodule update --init
           autoreconf -i
           emconfigure ./configure --with-oniguruma=builtinrun
+
+          emcc_cflags=' -sMODULARIZE=1 -sEXPORT_NAME=jq -sEXIT_RUNTIME=0'
+          emcc_cflags=" -sEXPORTED_RUNTIME_METHODS='[\"callMain\"]"
+          emcc_cflags=" -sEXPORTED_FUNCTIONS='[\"_main\"]'"
+          emcc_cflags=' --pre-js ../pre.js --post-js ../post.js'
+          echo "EMCC_CFLAG=Semcc_cflags"
+          EMCC_CFLAGS="$emcc_cflags" emmake make
           emmake make LDFLAGS=-all-static
-          cp jq jq.o
+
+          #cp jq jq.o
         working-directory: main/jq
 
-      - name: 'Try to do the thing with the `jq` module'
+      #- name: 'Try to do the thing with the `jq` module'
+      #  run: |
+      #    emcc jq.o -o jq.js -s ERROR_ON_UNDEFINED_SYMBOLS=0
+      #  working-directory: main/jq
+
+      - name: DEBUG
         run: |
-          emcc jq.o -o jq.js -s ERROR_ON_UNDEFINED_SYMBOLS=0
+          ls -AR
+          type jq
+          head jq
         working-directory: main/jq
 
       - name: Create test data
         id: test-data
         run: |
           tmpfile=$(mktemp)
-          echo '{ "a": "b" }' > $tmpfile
+          echo '{"a":"b"}' > $tmpfile
           echo "json=$tmpfile" | tee -a $GITHUB_OUTPUT
 
       - env:
