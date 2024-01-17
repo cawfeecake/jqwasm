@@ -34,14 +34,14 @@ jobs:
           echo $PATH > $GITHUB_PATH
         working-directory: emsdk
 
+      - name: 'Verify build requirement: `emscripten`'
+        run: |
+          emcc -v
+
       - uses: actions/checkout@v4
         with:
           submodules: recursive
           path: main
-
-      - name: 'Verify build requirement: `emscripten`'
-        run: |
-          emcc -v
 
       - name: 'Prep the `jq` module'
         run: |
@@ -52,10 +52,15 @@ jobs:
           emcc_cflags=' -sMODULARIZE=1 -sEXPORT_NAME=jq -sEXIT_RUNTIME=0'
           emcc_cflags=" -sEXPORTED_RUNTIME_METHODS='[\"callMain\"]"
           emcc_cflags=" -sEXPORTED_FUNCTIONS='[\"_main\"]'"
-          emcc_cflags=' --pre-js ../pre.js --post-js ../post.js'
+
+          main_repo_path=$(dirname $(pwd))
+          emcc_cflags=" --pre-js $main_repo_path/pre.js"
+          emcc_cflags=" --post-js $main_repo_path/post.js"
+
           echo "EMCC_CFLAG=Semcc_cflags"
-          EMCC_CFLAGS="$emcc_cflags" emmake make
-          emmake make LDFLAGS=-all-static
+          echo '::group::`emmake make...`'
+          EMCC_CFLAGS="$emcc_cflags" emmake make LDFLAGS=-all-static
+          echo '::endgroup::'
 
           #cp jq jq.o
         working-directory: main/jq
