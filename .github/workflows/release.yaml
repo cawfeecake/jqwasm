@@ -71,6 +71,11 @@ jobs:
           cp jq jq.js
         working-directory: main/jq
 
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jq.js
+          path: main/jq/jq.js
+
       - name: '[DEBUG] after build'
         run: |
           echo '::group::`ls -AR`...'
@@ -79,8 +84,3 @@ jobs:
           file jq.js
           head jq.js
         working-directory: main/jq
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: jq.js
-          path: main/jq/jq.js
