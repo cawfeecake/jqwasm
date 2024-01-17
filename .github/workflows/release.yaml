@@ -62,7 +62,7 @@ jobs:
           EMCC_CFLAGS="$emcc_cflags" emmake make LDFLAGS=-all-static
           echo '::endgroup::'
 
-          #cp jq jq.o
+          cp jq jq.js
         working-directory: main/jq
 
       #- name: 'Try to do the thing with the `jq` module'
@@ -72,7 +72,9 @@ jobs:
 
       - name: DEBUG
         run: |
+          echo '::group::`ls -AR`...'
           ls -AR
+          echo '::endgroup::'
           type jq
           head jq
         working-directory: main/jq
