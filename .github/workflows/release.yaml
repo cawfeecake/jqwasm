@@ -53,14 +53,14 @@ jobs:
           emconfigure ./configure --with-oniguruma=builtinrun
           echo '::endgroup::'
 
-          emcc_cflags=' -sMODULARIZE=1 -sEXPORT_NAME=jq -sEXIT_RUNTIME=0'
-          emcc_cflags=' -sALLOW_MEMORY_GROWTH=1'
-          emcc_cflags=" -sEXPORTED_RUNTIME_METHODS='[\"callMain\"]"
-          emcc_cflags=" -sEXPORTED_FUNCTIONS='[\"_main\"]'"
+          emcc_cflags='-sMODULARIZE=1 -sEXPORT_NAME=jq -sEXIT_RUNTIME=0'
+          emcc_cflags+=' -sALLOW_MEMORY_GROWTH=1'
+          emcc_cflags+=" -sEXPORTED_RUNTIME_METHODS='[\"callMain\"]"
+          emcc_cflags+=" -sEXPORTED_FUNCTIONS='[\"_main\"]'"
 
           main_repo_path=$(dirname $(pwd))
-          emcc_cflags=" --pre-js $main_repo_path/pre.js"
-          emcc_cflags=" --post-js $main_repo_path/post.js"
+          emcc_cflags+=" --pre-js $main_repo_path/pre.js"
+          emcc_cflags+=" --post-js $main_repo_path/post.js"
 
           echo "EMCC_CFLAG=$emcc_cflags"
           echo '::group::`emmake make...`'
@@ -69,6 +69,11 @@ jobs:
 
           cp jq jq.js
         working-directory: main/jq
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: jq.js
+          path: main/jq/jq.js
 
       #- name: 'Try to do the thing with the `jq` module'
       #  run: |
