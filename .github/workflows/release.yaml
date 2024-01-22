@@ -16,6 +16,7 @@ jobs:
           repository: emscripten-core/emsdk
           path: emsdk
 
+      # https://emscripten.org/docs/getting_started/downloads.html#installation-instructions-using-the-emsdk-recommended
       - name: 'Install build requirement: `emscripten`'
         run: |
           ./emsdk install latest
