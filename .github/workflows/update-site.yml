@@ -1,0 +1,66 @@
+---
+name: Update the GitHub Pages site
+
+on:
+  workflow_dispatch:
+    inputs:
+      artifact-run-id:
+        description: Which release workflow run to retrieve site artifacts
+        type: string
+        required: true
+
+# required permissions to be able to deployment to Pages
+permissions:
+  actions: read
+  contents: read
+  pages: write
+  id-token: write
+
+# will only have one workflow run running at a time
+concurrency:
+  group: pages
+  # pending jobs will be cancelled, but current run will be allowed to complete
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    environment:
+      name: pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    env:
+      ARTIFACT_RUN_ID: ${{ inptus.artifact-run-id }}
+    steps:
+      - name: Validate input(s)
+        run: |
+          if [[ "$ARTIFACT_RUN_ID" =~ ^[[:digit:]]+$ ]]; then
+            echo "::error::provided ID for release workflow run must be all numbers: \"$ARTIFACT_RUN_ID\""
+            exit 1
+          fi
+        
+      - name: Get `index.html`
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            index.html
+          sparse-checkout-cone-mode: false
+
+      - name: Retrieve site artifacts
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          gh run download "$ARTIFACT_RUN_ID"
+          mv output/* .
+          rm -rf output
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload site artifacts
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+
+      - name: Deploy to Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
