@@ -29,7 +29,7 @@ jobs:
       name: pages
       url: ${{ steps.deployment.outputs.page_url }}
     env:
-      ARTIFACT_RUN_ID: ${{ inptus.artifact-run-id }}
+      ARTIFACT_RUN_ID: ${{ inputs.artifact-run-id }}
     steps:
       - name: Validate input(s)
         run: |
