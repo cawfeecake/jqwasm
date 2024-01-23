@@ -33,7 +33,7 @@ jobs:
     steps:
       - name: Validate input(s)
         run: |
-          if [[ "$ARTIFACT_RUN_ID" =~ ^[[:digit:]]+$ ]]; then
+          if [[ ! "$ARTIFACT_RUN_ID" =~ ^[[:digit:]]+$ ]]; then
             echo "::error::provided ID for release workflow run must be all numbers: \"$ARTIFACT_RUN_ID\""
             exit 1
           fi
