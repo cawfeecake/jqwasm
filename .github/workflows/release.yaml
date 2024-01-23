@@ -1,5 +1,5 @@
 ---
-name: release
+name: Generate `jq` Javascript and WASM artifacts
 
 run-name: 'release `jq` (branch: ${{ github.ref }})'
 
