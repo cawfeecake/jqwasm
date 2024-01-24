@@ -33,3 +33,7 @@ git submodule add https://github.com/${owner}/${repoName}
 # e.g.
 git submodule add https://github.com/jqlang/jq
 ```
+
+# Credits
+
+Referenced the source of [jq-web](https://github.com/fiatjaf/jq-web) for building `jq` with Emscripten
