@@ -6,15 +6,25 @@
     jq().then(() => {
       document.getElementById("run_button").disabled = false
     })
+
+    function runJqOnPage() {
+      var data = document.getElementById("input_data").value
+      var query = document.getElementById("input_query").value
+      var result = jq.raw(data, query)
+      document.getElementById("output_area").value = result
+    }
   </script>
 </head>
 
 <body>
   <div id="input_boxes">
-    <textarea placeholder="Enter jq query to run..." name="" id="" cols="30" rows="10"></textarea>
-    <textarea placeholder="Enter JSON data to use..." name="" id="" cols="30" rows="10"></textarea>
+    <textarea placeholder="Enter jq query to run..." id="input_query" cols="54" rows="22"></textarea>
+    <textarea placeholder="Enter JSON data to use..." id="input_data" cols="54" rows="22"></textarea>
   </div>
-  <button id="run_button" disabled>Run <code>jq</code>...</button>
+  <button id="run_button" onclick="runJqOnPage()" disabled>
+    Run <code>jq</code>...
+  </button>
+  <input id="output_area" type="text" disabled></input>
 </body>
 
 </html>
